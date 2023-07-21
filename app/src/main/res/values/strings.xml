@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">WithOutChecksDriver</string>
+    <string name="registration">Регистрация</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="fistname">Имя</string>
+    <string name="last_name">Фамилие</string>
+    <string name="email">Email</string>
+    <string name="car">Автомобиль</string>
+    <string name="create_car">Добавить автомобиль</string>
+    <string name="mark">Марка</string>
+    <string name="model">Модель</string>
+    <string name="year_created">Год выпуска</string>
+    <string name="car_color">Цвет</string>
+    <string name="create_new_model_text">Если в списках нет модели, марки, года или цвета</string>
+    <string name="gos_number">Гос. номер</string>
+    <string name="registtration_button_text">Зарегистрировать</string>
+    <string name="registration_button_text">Зарегистрироваться</string>
+    <string name="passwor">Пароль</string>
+    <string name="authorisation_link_text">Войти</string>
+    <string name="authorisation_screen_title">Вход</string>
+    <string name="failed_authorisation_text">Не правилно введен имя пользователя или пароль</string>
+    <string name="back_button_desc">Назад</string>
+    <string name="loading">Загрузка</string>
+</resources>
