@@ -7,19 +7,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import okio.IOException
+import kotlinx.coroutines.withContext
+import su.egorovwa.withoutchecksdriver.data.DataBaseRepository
+import su.egorovwa.withoutchecksdriver.datastore.TokenManager
 import su.egorovwa.withoutchecksdriver.network.NetworkRepository
+import su.egorovwa.withoutchecksdriver.network.dto.NetworkData
 import javax.inject.Inject
 
 private const val TAG = "DriverRegistrationViewModel"
 
 @HiltViewModel
 class DriverRegistrationViewModel @Inject constructor(
-    private val networkRepository: NetworkRepository
+    private val networkRepository: NetworkRepository,
+    private val tokenManager: TokenManager
 ) : ViewModel() {
 
 
@@ -30,30 +32,29 @@ class DriverRegistrationViewModel @Inject constructor(
         this.driverUiState = newDriverUiState
     }
 
-    fun register() {
-        val dto = toDto(driverUiState = driverUiState)
-        val json = Json.encodeToString(value = dto)
-        Log.i(TAG, json )
+    fun register(onSuccess:()->Unit) {
+
         viewModelScope.launch {
-
-            try {
-                val response =
-                    async { networkRepository.registre(toDto(driverUiState)) }.await()
-                if (response.isSuccessful && response.code() == 201 && response.body() != null) {
-                    val registered = response.body()
+            withContext(Dispatchers.IO){
+                val networkData = networkRepository.registre(toDto(driverUiState))
+                if (networkData is NetworkData.NewDriverDto) {
                     driverUiState =
-                        driverUiState.copy(
-                            isSuccess = true,
-                            id = registered?.id?.toString() ?: ""
-                        )
+                        driverUiState.copy(id = networkData.id.toString())
+                } else {
+                    val eror = networkData as NetworkData.NetworkError
+                    driverUiState = driverUiState.copy(errors = listOf(eror.message))
                 }
-            } catch (e: IOException) {
-                val errors = driverUiState.errors.toMutableList()
-                errors.add(e.message ?: "Uncnow Error") // TODO: както не так
-                Log.e(TAG, "error: ${e.message}:${e}")
-
-
-                driverUiState = driverUiState.copy(errors = errors.toList())
+                val autitification = networkRepository.login(driverUiState.phone, driverUiState.password )
+                if (autitification is NetworkData.AuthResponce){
+                    tokenManager.saveId(autitification.driverId.toString())
+                    tokenManager.savePhone(driverUiState.phone)
+                    tokenManager.savePassword(driverUiState.password)
+                    tokenManager.saveToken(autitification.token)
+                driverUiState = driverUiState.copy(isSuccess = true)
+                }
+            }
+            if (driverUiState.isSuccess){
+                onSuccess()
             }
         }
 

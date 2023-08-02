@@ -1,6 +1,6 @@
 package su.egorovwa.withoutchecksdriver.ui.registrationScreen
 
-import su.egorovwa.withoutchecksdriver.network.dto.NewDriverDto
+import su.egorovwa.withoutchecksdriver.network.dto.NetworkData
 
 data class DriverUiState(
     val phone: String = "",
@@ -20,13 +20,13 @@ data class DriverUiState(
 
 
     )
-fun toDto(driverUiState: DriverUiState):NewDriverDto{
-    return NewDriverDto(
+fun toDto(driverUiState: DriverUiState): NetworkData.NewDriverDto {
+    return NetworkData.NewDriverDto(
         phone = driverUiState.phone,
         lastName = driverUiState.lastName,
         fistName = driverUiState.fistName,
         password = driverUiState.password,
         email = driverUiState.email,
 
-    )
+        )
 }

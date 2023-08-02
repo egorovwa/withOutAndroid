@@ -5,5 +5,6 @@ data class AuthorisationUiState(
     val isPhoneValid:Boolean =true,
     val password:String="",
     val isPasswordValid:Boolean =true,
-    val isFailed:Boolean =false
+    val isFailed:Boolean =false,
+    val isSuccess:Boolean = false
 )

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ fun DriverRegistrationScreen(
     onAuthorisationLinkClick: () -> Unit,
     onRegistrationButtonClick: () -> Unit,
     canNavigateBack: Boolean,
+    onSuccess:()->Unit,
     navigateUp: () -> Unit,
 ) {
 
@@ -64,7 +66,7 @@ fun DriverRegistrationScreen(
             driverUiState = viewModel.driverUiState,
             onValueChange = { viewModel.updateUistate(it) },
             onRegistrationButtonClick = {
-                viewModel.register()
+                viewModel.register(onSuccess)
                 Toast.makeText(context, "you id = ${viewModel.driverUiState.id}", Toast.LENGTH_SHORT).show()
                 onRegistrationButtonClick()
                                         },
@@ -91,6 +93,7 @@ fun DriverRegistrationBody(
     hasError: Boolean,
     erors: List<String>,
 ) {
+
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -109,7 +112,7 @@ fun DriverRegistrationBody(
                 )
             },
             isValid = { isPhoneNumberValid(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
             lable = stringResource(R.string.phone_number)
         )
         InputFiled(
@@ -123,7 +126,7 @@ fun DriverRegistrationBody(
                 )
             },
             isValid = { isNameValid(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
             lable = stringResource(R.string.fistname)
         )
         InputFiled(
@@ -137,7 +140,7 @@ fun DriverRegistrationBody(
                 )
             },
             isValid = { isNameValid(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
             lable = stringResource(R.string.last_name)
         )
         InputFiled(
@@ -151,7 +154,7 @@ fun DriverRegistrationBody(
                 )
             },
             isValid = { isEmailValid(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
             lable = stringResource(R.string.email)
         )
         InputFiled(
@@ -165,7 +168,7 @@ fun DriverRegistrationBody(
                 )
             },
             isValid = { isPasswordValid(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             lable = stringResource(R.string.passwor)
         )
         SimpleTextLink(text = R.string.authorisation_link_text, onClick = onAuthorisationLinkClick)

@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import su.egorovwa.withoutchecksdriver.R
 import su.egorovwa.withoutchecksdriver.navigation.NavigationDestination
 import su.egorovwa.withoutchecksdriver.ui.uiutils.AuthorisationTopBar
@@ -35,11 +36,12 @@ object AuthorisationDestanation : NavigationDestination {
 fun AutchorisationScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    viewModel: AuthorisationViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: AuthorisationViewModel = hiltViewModel(),
     onRegistrationLinkClick: () -> Unit,
     onAuthorisationButtonClick: () -> Unit,
+    onSuccess: () -> Unit
 
-    ) {
+) {
     var authorisationUiState = viewModel.authorisationUiState
     Scaffold(topBar = {
         AuthorisationTopBar(
@@ -51,7 +53,9 @@ fun AutchorisationScreen(
         AuthorisationScreenBody(
             authorisationUiState = authorisationUiState,
             onRegistrationLinkClick = onRegistrationLinkClick,
-            onAuthorisationButtonClick = { /*TODO*/ },
+            onAuthorisationButtonClick = {
+                viewModel.login(onSuccess)
+            },
             onValueChenge = { viewModel.updateUiState(it) },
             isFailed = authorisationUiState.isFailed,
             modifier = Modifier.padding(it)
@@ -94,7 +98,7 @@ fun AuthorisationScreenBody(
                 .align(alignment = Alignment.End)
                 .padding(end = 16.dp, top = 8.dp)
         )
-        Button(onClick = { onAuthorisationButtonClick() }) {
+        Button(onClick =  onAuthorisationButtonClick ) {
             Text(
                 text = stringResource(id = R.string.authorisation_link_text),
                 style = MaterialTheme.typography.bodySmall

@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import su.egorovwa.withoutchecksdriver.ui.authorisationScreen.AutchorisationScreen
 import su.egorovwa.withoutchecksdriver.ui.authorisationScreen.AuthorisationDestanation
+import su.egorovwa.withoutchecksdriver.ui.fortesttodelete.SuccessScreen
+import su.egorovwa.withoutchecksdriver.ui.fortesttodelete.SuccessScreenDestanation
 import su.egorovwa.withoutchecksdriver.ui.registrationScreen.DriverRegistrationDestanation
 import su.egorovwa.withoutchecksdriver.ui.registrationScreen.DriverRegistrationScreen
 
@@ -21,7 +23,8 @@ fun DriverNavHost(
                 canNavigateBack = true,
                 navigateUp = { navHostController.navigateUp() },
                 onRegistrationLinkClick = { navHostController.navigate(DriverRegistrationDestanation.route) },
-                onAuthorisationButtonClick = {}
+                onAuthorisationButtonClick = {},
+                onSuccess = {navHostController.navigate(SuccessScreenDestanation.route)}
             )
         }
         composable(route = DriverRegistrationDestanation.route) {
@@ -29,8 +32,12 @@ fun DriverNavHost(
                 onAuthorisationLinkClick = { navHostController.navigate(AuthorisationDestanation.route) },
                 onRegistrationButtonClick = { },
                 canNavigateBack = true,
-                navigateUp = { navHostController.navigateUp() }
+                navigateUp = { navHostController.navigateUp() },
+                onSuccess = {navHostController.navigate(SuccessScreenDestanation.route)}
             )
+        }
+        composable(route= SuccessScreenDestanation.route){
+            SuccessScreen(info = "no info")
         }
     }
 }
